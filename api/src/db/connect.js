@@ -12,7 +12,7 @@ db.connect((err) => {
     console.error('❌ Database connection failed:', err.stack);
     return;
   }
-  console.log('✅ Database connected successfully as ID', db.threadId);
+  console.log('✅ Database connected successfully as ID', db.threadId );
 });
 
 export default db;
