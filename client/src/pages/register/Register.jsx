@@ -3,7 +3,7 @@ import "./register.scss";
 import { useState } from "react";
 import axios from 'axios';
 
-const Register = () => {
+const Register =  () => {
   const [inputs, setInputs] = useState({
     username: "",
     email: "",

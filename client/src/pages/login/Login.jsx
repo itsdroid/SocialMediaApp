@@ -1,16 +1,39 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import "./login.scss";
-import { AuthContext } from '../../context/authContext.js';
+import { AuthContext } from "../../context/authContext";
 
+const Login = () => {
+  const [inputs, setInputs] = useState({
+    email: "",
+    password: "",
+  });
 
+  const [err, setErr] = useState(null);
+  const [status, setStatus] = useState(null);
 
- const Login = () => {
   const { login } = useContext(AuthContext);
-    const handleLogin = () => {
-      login();
-    };
-  
+
+  const handleChange = (e) => {
+    setInputs((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setErr(null);
+    setStatus("loading");
+    try {
+      await login(inputs);
+      setStatus("success");
+    } catch (error) {
+      setErr(error?.response?.data || error.message || "Login failed");
+      setStatus("error");
+    }
+  };
+
   return (
     <div className="login">
       <div className="card">
@@ -28,15 +51,29 @@ import { AuthContext } from '../../context/authContext.js';
         </div>
         <div className="right">
           <h1>Login</h1>
-          <form onSubmit={Login}>
-            <input type="text" placeholder="Username" name="username"/>
-            <input type="password" placeholder="Password" name="password" />
-            <button onClick={handleLogin}>Login</button>
+          <form onSubmit={handleLogin}>
+            <input
+              type="email"
+              placeholder="Email"
+              name="email"
+              onChange={handleChange}
+              value={inputs.email}
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              name="password"
+              onChange={handleChange}
+              value={inputs.password}
+            />
+            <button type="submit">Login</button>
+            {status === "loading" && <p>Logging in...</p>}
+            {err && <p className="error">{err}</p>}
           </form>
         </div>
       </div>
     </div>
   );
- }
- 
+};
+
 export default Login;
